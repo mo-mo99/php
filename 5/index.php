@@ -1,23 +1,42 @@
 <?php
 
-function has_capital($str){
-    return preg_match('/[A-Z]/', $str);
-}
+$capital = '/[A-Z]{4}/';
+$small = '/[a-z]{4}/';
+$number = '/\d{4}/';
+$symbol = '/[(%|$|#|_|*)]{4}/';
 
-function has_small($str){
-    return preg_match('/[a-z]/', $str);
-}
-
-function has_num($str){
-    return preg_match('/\d/', $str);
-}
-
-function has_symbol($str){
-    return preg_match('/[^a-zA-Z\d]/', $str);
-}
 if (isset($_POST['submit_btn'])){
-    $pass = $_POST['pass'];
-    $result = has_symbol($pass) + has_num($pass) + has_capital($pass) + has_small($pass);
-    echo ($result > 2)? 'more than 2 type' : (($result < 2) ? 'less than 2 type' : 'valid pass');
+    $str = $_POST['pass'];
+
+    preg_match_all("/\d/",$str, $num_array );
+    preg_match_all("/[A-Z]/",$str, $capital_array );
+    preg_match_all("/[a-z]/",$str, $small_array );
+    preg_match_all("/[(%|$|#|_|*)]/",$str, $symbol_array );
+
+    if (strlen($str) < 10) echo 'password should have more than 10<br>';
+    if (check($number, $str)) echo 'there is more than 3 numbers<br>';
+    elseif (elements($num_array[0])) echo 'there is less than 2 numbers<br>';
+
+    if (check($capital, $str)) echo 'there is more than 3 capital letter<br>';
+    elseif (elements($capital_array[0])) echo 'there is less than 2 capital letter<br>';
+
+    if (check($small, $str)) echo 'there is more than 3 small letter<br>';
+    elseif (elements($small_array[0])) echo 'there is less than 2 small letter<br>';
+
+    if (check($symbol, $str)) echo 'there is more than 3 symbol<br>';
+    elseif (elements($symbol_array[0])) echo 'there is less than 2 symbol<br>';
+    print_r($symbol_array[0]);
+
+}
+
+function check($pattern, $array){
+    if (preg_match($pattern, $array)){
+        return true;
+    }return false;
+}
+
+function elements($array){
+    if(count($array) < 2)return true;
+    else false;
 }
 
