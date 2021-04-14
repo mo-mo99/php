@@ -1,18 +1,15 @@
 <?php
-$file = parse_ini_file("index.ini", $useSections = true, $mode = INI_SCANNER_NORMAL);
 
 
-if (isset($_POST['submit_btn'])){
-    $str = $_POST['text'];
-    $texts = explode("\n", $str);
-    ini_changer($texts);
 
-
-}
-
-function ini_changer($text){
+function ini_changer(){
     $file = parse_ini_file("index.ini", $useSections = true, $mode = INI_SCANNER_NORMAL);
-    foreach ($text as $val){
+    $input_file =$file['main']['filename'];
+    $new_file = fopen($input_file, "r");
+    $reader = fread($new_file, filesize("mainFile.txt"));
+    $lines = explode("\n", $reader);
+    fclose($new_file);
+    foreach ($lines as $val){
         $my_text = explode(" ", $val);
         $i = 0;
         foreach ($file as $value) {
@@ -22,14 +19,14 @@ function ini_changer($text){
                     switch ($i){
                         case 1:
                             if ($value['upper']){
-                                echo strtoupper(implode(" ", $text));
+                                echo strtoupper(implode(" ", $my_text))."<br>";
                             }
-                            else echo strtolower(implode(" ", $text));
+                            else echo strtolower(implode(" ", $my_text))."<br>";
                             break;
                         case 2:
                             if ($value['direction'] == "+"){
                                 $result = [];
-                                $txt = preg_split('//', implode(" ", $text), -1);
+                                $txt = preg_split('//', implode(" ", $my_text), -1);
                                 foreach ($txt as $t){
                                     if ($t == '9'){
                                         array_push($result, '0');
@@ -43,11 +40,11 @@ function ini_changer($text){
                                             array_push($result, $t);
                                         }
                                     }
-                                }echo implode("", $result);
+                                }echo implode("", $result)."<br>";
 
                             }elseif ($value['direction'] == "-") {
                                 $result = [];
-                                $txt = preg_split('//', implode(" ", $text), -1);
+                                $txt = preg_split('//', implode(" ", $my_text), -1);
                                 foreach ($txt as $t) {
                                     if ($t == '0') {
                                         array_push($result, '9');
@@ -61,14 +58,14 @@ function ini_changer($text){
                                         }
                                     }
                                 }
-                                echo implode("", $result);
+                                echo implode("", $result)."<br>";
                             }
                             break;
 
                         case 3:
                             $k = $value['delete'];
-                            $l = str_replace($k, "", implode("", $text));
-                            echo $l;
+                            $l = str_replace($k, "", implode("", $my_text));
+                            echo $l."<br>";
                             break;
                     }
                 }
@@ -78,3 +75,4 @@ function ini_changer($text){
 
 }
 
+ini_changer();
