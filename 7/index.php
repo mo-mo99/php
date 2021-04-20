@@ -1,10 +1,5 @@
 <?php
 
-//$str = 'abcdabcanna';
-//$pos = strrpos($str, 'a');
-//echo $pos;
-
-
 function send_ping($address)
 {
 
