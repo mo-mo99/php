@@ -43,5 +43,5 @@ $c = new child1('new_file');
 $c->operation('Hello world');
 
 //$c1 = new child2('hello');
-//$c1->operation('true');
+//$c1->operation('time');
 
